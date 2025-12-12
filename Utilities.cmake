@@ -1,0 +1,47 @@
+### `cmake_language()`: 3.18
+
+include(CheckCCompilerFlag)
+include(CMakeParseArguments)
+
+### Convert compile flag to variable-appropriate string.
+### e.g. "-Wall" -> "<prefix>_WALL<suffix>".
+function(_flag_string_variable FLAG OUT_VAR PREFIX SUFFIX)
+	string(SUBSTRING ${FLAG} 0 1 _FLAG_START)
+	string(SUBSTRING ${FLAG} 1 -1 _FLAG_NAME)
+
+	# MS to GNU style CLI.
+	if(${_FLAG_START} STREQUAL "/")
+		string(PREPEND _FLAG_NAME "_MS_")
+	else()
+		string(PREPEND _FLAG_NAME "_")
+	endif()
+
+	string(MAKE_C_IDENTIFIER ${_FLAG_NAME} _FLAG_NAME)
+
+	string(TOUPPER "${_FLAG_NAME}" _FLAG_NAME)
+
+	set(${OUT_VAR} "${PREFIX}${_FLAG_NAME}${SUFFIX}" PARENT_SCOPE)
+endfunction()
+
+### Add compile flag if it exists.
+function(c_options_conditional)
+	cmake_parse_arguments(
+			C_OPTIONS_CONDITIONAL
+			"REQUIRED" "COMMAND" "ARGS;FLAGS"
+			${ARGN})
+
+	foreach(FLAG IN LISTS C_OPTIONS_CONDITIONAL_FLAGS)
+		_flag_string_variable(${FLAG} _FLAG_NAME "C_FLAG" "")
+		check_c_compiler_flag(${FLAG} ${_FLAG_NAME})
+
+		if(${${_FLAG_NAME}})
+			cmake_language(
+					CALL
+					${C_OPTIONS_CONDITIONAL_COMMAND}
+					${C_OPTIONS_CONDITIONAL_ARGS}
+					${FLAG})
+		elseif(${C_OPTIONS_CONDITIONAL_REQUIRED})
+			message(FATAL_ERROR "${_FLAG_NAME} Required")
+		endif()
+	endforeach()
+endfunction()
