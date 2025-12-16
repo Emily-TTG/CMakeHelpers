@@ -23,6 +23,12 @@ function(_flag_string_variable FLAG OUT_VAR PREFIX SUFFIX)
 	set(${OUT_VAR} "${PREFIX}${_FLAG_NAME}${SUFFIX}" PARENT_SCOPE)
 endfunction()
 
+function(c_flag_test FLAG OUT_VAR)
+	_flag_string_variable(${FLAG} _FLAG_NAME "C_FLAG" "")
+	check_c_compiler_flag(${FLAG} ${_FLAG_NAME})
+	set(${OUT_VAR} ${_FLAG_NAME} PARENT_SCOPE)
+endfunction()
+
 ### Add compile flag if it exists.
 function(c_options_conditional)
 	cmake_parse_arguments(
@@ -31,17 +37,16 @@ function(c_options_conditional)
 			${ARGN})
 
 	foreach(FLAG IN LISTS C_OPTIONS_CONDITIONAL_FLAGS)
-		_flag_string_variable(${FLAG} _FLAG_NAME "C_FLAG" "")
-		check_c_compiler_flag(${FLAG} ${_FLAG_NAME})
+		c_flag_test(${FLAG} _HAVE_FLAG)
 
-		if(${${_FLAG_NAME}})
+		if(${${_HAVE_FLAG}})
 			cmake_language(
 					CALL
 					${C_OPTIONS_CONDITIONAL_COMMAND}
 					${C_OPTIONS_CONDITIONAL_ARGS}
 					${FLAG})
 		elseif(${C_OPTIONS_CONDITIONAL_REQUIRED})
-			message(FATAL_ERROR "${_FLAG_NAME} Required")
+			message(FATAL_ERROR "${FLAG} required")
 		endif()
 	endforeach()
 endfunction()
