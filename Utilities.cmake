@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: X11
+# Copyright (C) 2025 Emily "TTG" Banerjee <prs.ttg+cmh@pm.me>
+
+### `string(PREPEND)`: 3.10
 ### `cmake_language()`: 3.18
 
 include(CheckCCompilerFlag)

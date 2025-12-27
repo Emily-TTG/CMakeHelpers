@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: X11
+# Copyright (C) 2025 Emily "TTG" Banerjee <prs.ttg+cmh@pm.me>
+
 ### `$<CONFIG:...>`: 3.19
 
 include(${CMAKE_CURRENT_LIST_DIR}/Utilities.cmake)
