@@ -15,6 +15,7 @@ endfunction()
 function(_global_c_flag_release_conditional FLAG)
 	_c_flag_conditional_target(CMAKE_C_FLAGS_RELEASE ${FLAG})
 	_c_flag_conditional_target(CMAKE_C_FLAGS_RELWITHDEBINFO ${FLAG})
+	_c_flag_conditional_target(CMAKE_C_FLAGS_MINSIZEREL ${FLAG})
 endfunction()
 
 function(_global_c_flag_conditional FLAG)
