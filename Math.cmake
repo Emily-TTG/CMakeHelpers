@@ -12,10 +12,15 @@ function(_c_flag_conditional_target TARGET FLAG)
 	endif()
 endfunction()
 
-function(_global_c_flag_release_conditional FLAG)
+function(_global_c_cxx_flag_release_conditional FLAG)
 	_c_flag_conditional_target(CMAKE_C_FLAGS_RELEASE ${FLAG})
+	_c_flag_conditional_target(CMAKE_CXX_FLAGS_RELEASE ${FLAG})
+
 	_c_flag_conditional_target(CMAKE_C_FLAGS_RELWITHDEBINFO ${FLAG})
+	_c_flag_conditional_target(CMAKE_CXX_FLAGS_RELWITHDEBINFO ${FLAG})
+
 	_c_flag_conditional_target(CMAKE_C_FLAGS_MINSIZEREL ${FLAG})
+	_c_flag_conditional_target(CMAKE_CXX_FLAGS_MINSIZEREL ${FLAG})
 endfunction()
 
 function(_global_c_flag_conditional FLAG)
@@ -27,11 +32,11 @@ function(enable_fast_math)
 	# Adapted from https://github.com/CelestiaProject/Celestia/blob/master/cmake/FastMath.cmake
 	# Which is licenced under the GNU GPLv2.
 
-	_global_c_flag_release_conditional(/fp:fast)
-	_global_c_flag_release_conditional(-ffast-math)
-	_global_c_flag_release_conditional(-fno-finite-math-only)
-	_global_c_flag_release_conditional(-fsigned-zeros)
-	_global_c_flag_release_conditional(-fno-associative-math)
+	_global_c_cxx_flag_release_conditional(/fp:fast)
+	_global_c_cxx_flag_release_conditional(-ffast-math)
+	_global_c_cxx_flag_release_conditional(-fno-finite-math-only)
+	_global_c_cxx_flag_release_conditional(-fsigned-zeros)
+	_global_c_cxx_flag_release_conditional(-fno-associative-math)
 endfunction()
 
 ### Globally enables host-native CPU tuning.
